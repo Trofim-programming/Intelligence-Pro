@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant | Чат с нейросетью</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-light: #8b5cf6;
+            --secondary: #f43f5e;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --dark-gray: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .subscription-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .subscription-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .subscription-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subscription-description {
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .subscription-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.2);
+        }
+
+        .promocode-container {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .promocode-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .promocode-input {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .promocode-input input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .promocode-input input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+        }
+
+        .promocode-input button {
+            padding: 0 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .promocode-input button:hover {
+            background: var(--primary-dark);
+        }
+
+        .chat-section {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-section.active {
+            display: flex;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 5px;
+            align-items: center;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chat-input-container {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+        }
+
+        .send-button {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .send-button i {
+            font-size: 18px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .alert-error {
+            background: var(--error);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .content {
+                height: 500px;
+            }
+            
+            .subscription-section {
+                padding: 30px 20px;
+            }
+            
+            .subscription-title {
+                font-size: 24px;
+            }
+            
+            .subscription-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .promocode-input {
+                flex-direction: column;
+            }
+            
+            .promocode-input button {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div>
+                <div class="header-title">AI Assistant</div>
+                <div class="header-subtitle">На основе Llama 3</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="subscription-section" class="subscription-section">
+                <div class="subscription-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h1 class="subscription-title">Доступ к нейросети</h1>
+                <p class="subscription-description">
+                    Для использования нашего интеллектуального ассистента требуется подписка. 
+                    Оформите подписку или введите промокод для доступа.
+                </p>
+                
+                <div class="subscription-buttons">
+                    <button id="subscribe-button" class="btn btn-primary">
+                        <i class="fas fa-crown"></i> Оформить подписку
+                    </button>
+                    <button id="promocode-button" class="btn btn-secondary">
+                        <i class="fas fa-ticket-alt"></i> У меня есть промокод
+                    </button>
+                </div>
+                
+                <div id="promocode-container" class="promocode-container">
+                    <div class="promocode-input">
+                        <input type="text" id="promocode-text" placeholder="Введите промокод">
+                        <button id="submit-promocode">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="chat-section" class="chat-section">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        Привет! Я ваш AI ассистент на основе Llama 3. Чем могу помочь?
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <input type="text" id="message-input" class="chat-input" placeholder="Напишите сообщение...">
+                    <button id="send-button" class="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Конфигурация API
+        const API_KEY = "io-v2-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvd25lciI6Ijg2NTAyY2Q1LTJiYjEtNGUwOS05NDE4LTgyMGY3NmU0MDNiNiIsImV4cCI6NDkwNDk1NTk5NX0.ewq1ZHcwRYnq35nUA4nKBpBpUhBZQ-EMnxsm1zcD4hyl7TGWhd70ikdQGKnCmMsdOWunAgHFDX3878pLpT2QJw";
+        const API_URL = "https://api.intelligence.io.solutions/api/v1/chat/completions";
+
+        // Проверяем подписку
+        const hasSubscription = localStorage.getItem('hasSubscription') === 'true';
+        
+        // Элементы DOM
+        const subscriptionSection = document.getElementById('subscription-section');
+        const chatSection = document.getElementById('chat-section');
+        const subscribeButton = document.getElementById('subscribe-button');
+        const promocodeButton = document.getElementById('promocode-button');
+        const promocodeContainer = document.getElementById('promocode-container');
+        const promocodeText = document.getElementById('promocode-text');
+        const submitPromocode = document.getElementById('submit-promocode');
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        
+        // Инициализация интерфейса
+        if (hasSubscription) {
+            subscriptionSection.style.display = 'none';
+            chatSection.classList.add('active');
+        }
+        
+        // Обработчики событий
+        promocodeButton.addEventListener('click', () => {
+            promocodeContainer.classList.toggle('active');
+        });
+        
+        submitPromocode.addEventListener('click', checkPromocode);
+        promocodeText.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPromocode();
+        });
+        
+        subscribeButton.addEventListener('click', () => {
+            showAlert('В этом демо подписка имитируется. В реальном проекте подключите платежную систему.', 'success');
+            // Имитация успешной подписки
+            setTimeout(() => {
+                localStorage.setItem('hasSubscription', 'true');
+                subscriptionSection.style.display = 'none';
+                chatSection.classList.add('active');
+                showAlert('Подписка активирована! Теперь вы можете общаться с нейросетью.', 'success');
+            }, 1500);
+        });
+        
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        // Функции
+        function checkPromocode() {
+            const promocode = promocodeText.value.trim().toUpperCase();
+            if (promocode === 'GFR-2025') {
+                localStorage.setItem('hasSubscription', 'true');
+                subscriptionSection.style.display = 'none';
+                chatSection.classList.add('active');
+                showAlert('🎉 Промокод активирован! Теперь у вас есть доступ к нейросети.', 'success');
+            } else {
+                showAlert('❌ Неверный промокод. Попробуйте еще раз или оформите подписку.', 'error');
+            }
+        }
+        
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Добавляем сообщение пользователя
+            addMessageToChat(message, 'user');
+            messageInput.value = '';
+            
+            // Индикатор набора сообщения
+            const typingMessage = addTypingIndicator();
+            
+            try {
+                // Определяем тип запроса (общий/конкретный)
+                const isGeneralQuestion = message.toLowerCase().includes("как") || 
+                                         message.toLowerCase().includes("что") || 
+                                         message.toLowerCase().includes("почему") ||
+                                         message.length < 15;
+                
+                let botResponse;
+                
+                if (isGeneralQuestion) {
+                    // Для общих вопросов используем API
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            "model": "meta-llama/Llama-3.3-70B-Instruct",
+                            "messages": [
+                                {"role": "system", "content": "You are a helpful assistant that responds in Russian"},
+                                {"role": "user", "content": message}
+                            ]
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.choices && data.choices.length > 0) {
+                        botResponse = data.choices[0].message.content;
+                        if (botResponse.includes('</think>\n\n')) {
+                            botResponse = botResponse.split('</think>\n\n')[1];
+                        }
+                    } else {
+                        botResponse = "Не удалось получить ответ от нейросети. Попробуйте еще раз.";
+                    }
+                } else {
+                    // Для конкретных вопросов - предопределенные ответы
+                    botResponse = generateSmartResponse(message);
+                }
+                
+                // Удаляем индикатор и показываем ответ
+                typingMessage.remove();
+                addMessageToChat(botResponse.trim(), 'bot');
+                
+            } catch (error) {
+                typingMessage.remove();
+                // Если API не работает, используем локальные ответы
+                const fallbackResponse = generateSmartResponse(message);
+                addMessageToChat(fallbackResponse, 'bot');
+                console.error('Ошибка API:', error);
+            }
+        }
+        
+        function generateSmartResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            
+            // Ответы на приветствия
+            if (/привет|здравствуй|добрый|hello|hi/i.test(lowerMessage)) {
+                return "Привет! Я ваш виртуальный помощник. Чем могу помочь?";
+            }
+            
+            // Ответы на вопросы о возможностях
+            if (/что ты умеешь|твои функции|возможности/i.test(lowerMessage)) {
+                return "Я могу отвечать на вопросы, помогать с информацией, давать советы и объяснять сложные понятия простыми словами. Спросите меня о чем угодно!";
+            }
+            
+            // Ответы на технические вопросы
+            if (/html|css|javascript|программир|код/i.test(lowerMessage)) {
+                const techAnswers = [
+                    "В HTML5 семантическая разметка важна для SEO. Используйте теги <header>, <section>, <article>.",
+                    "CSS Grid и Flexbox - современные способы верстки. Grid для двумерных, Flexbox для одномерных layouts.",
+                    "JavaScript асинхронность можно обрабатывать через async/await, что делает код чище чем промисы."
+                ];
+                return techAnswers[Math.floor(Math.random() * techAnswers.length)];
+            }
+            
+            // Ответы на личные вопросы
+            if (/как дела|как ты|настроение/i.test(lowerMessage)) {
+                return "У меня всегда отличное настроение! Я здесь, чтобы помочь вам. Как ваши дела?";
+            }
+            
+            // Ответы на вопросы о времени/дате
+            if (/который час|сколько времени|дата|число/i.test(lowerMessage)) {
+                const now = new Date();
+                return `Сейчас ${now.toLocaleTimeString()}, ${now.toLocaleDateString('ru-RU', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}`;
+            }
+            
+            // Ответы на сложные вопросы
+            if (/философ|смысл жизни/i.test(lowerMessage)) {
+                return "Смысл жизни - субъективное понятие. Многие философы считают, что он в самом поиске смысла, развитии и помощи другим.";
+            }
+            
+            // Общий интеллектуальный ответ
+            const generalAnswers = [
+                "Интересный вопрос! Если говорить кратко, то это зависит от контекста и конкретных условий.",
+                "Чтобы дать точный ответ, мне нужно больше деталей. Можете уточнить ваш вопрос?",
+                "На этот счет есть разные мнения. С научной точки зрения можно сказать, что...",
+                "Это сложный вопрос, но я постараюсь объяснить просто: суть в том, что...",
+                "Позвольте я отвечу вам цитатой одного умного человека: 'Важно не знать все ответы, а задавать правильные вопросы'."
+            ];
+            
+            return generalAnswers[Math.floor(Math.random() * generalAnswers.length)];
+        }
+        
+        function addMessageToChat(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageElement.textContent = text;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageElement;
+        }
+        
+        function addTypingIndicator() {
+            const typingElement = document.createElement('div');
+            typingElement.classList.add('message', 'bot-message');
+            
+            const typingText = document.createElement('div');
+            typingText.classList.add('typing-indicator');
+            typingText.innerHTML = `
+                Нейросеть печатает
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            `;
+            
+            typingElement.appendChild(typingText);
+            chatMessages.appendChild(typingElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return typingElement;
+        }
+        
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.classList.add('alert', `alert-${type}`);
+            alert.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

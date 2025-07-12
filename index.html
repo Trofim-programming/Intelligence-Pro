@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligence Pro - Разработка Telegram-ботов с ИИ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .logo i {
+            color: #a855f7;
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #d1d5db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #ffffff;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: #d1d5db;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6d28d9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #a855f7;
+            border: 2px solid #a855f7;
+        }
+
+        .btn-secondary:hover {
+            background: #a855f7;
+            color: white;
+        }
+
+        .btn-light {
+            background: white;
+            color: #7c3aed;
+        }
+
+        .btn-light:hover {
+            background: #f3f4f6;
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline-light:hover {
+            background: white;
+            color: #7c3aed;
+        }
+
+        /* Sections */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: #d1d5db;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #a855f7;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(236, 72, 153, 0.5));
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .service-header h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-header p {
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            color: #d1d5db;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #a855f7;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .about-features {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .about-feature:last-child {
+            margin-bottom: 0;
+        }
+
+        .about-feature .feature-icon {
+            font-size: 2rem;
+            color: #a855f7;
+            margin-bottom: 0;
+        }
+
+        .feature-content h4 {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-content p {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-form-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-form-container h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-form-container p {
+            color: #d1d5db;
+            margin-bottom: 2rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #d1d5db;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            color: #a855f7;
+        }
+
+        .contact-details h4 {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-details p {
+            color: #d1d5db;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(236, 72, 153, 0.5));
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.125rem;
+            color: #d1d5db;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo i {
+            color: #a855f7;
+            font-size: 1.5rem;
+        }
+
+        .footer-section p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b, #581c87);
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header i {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .modal-content p {
+            color: #d1d5db;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #a855f7;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-overlay p {
+            color: #ffffff;
+            font-size: 1.125rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .about-text h2 {
+                font-size: 2rem;
+            }
+
+            .cta h2 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Chat Widget Styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-container {
+            display: none;
+            width: 350px;
+            height: 500px;
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            flex-direction: column;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-container.active {
+            display: flex;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header h3 i {
+            color: #a855f7;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: #d1d5db;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-chat:hover {
+            color: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: #334155;
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            background: #0f172a;
+            border-top: 1px solid #334155;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: #334155;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: #7c3aed;
+        }
+
+        .send-button {
+            padding: 0 20px;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            background: #6d28d9;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Subscription for chat */
+        .chat-subscription {
+            padding: 20px;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 12px;
+            margin: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-subscription h4 {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .chat-subscription p {
+            color: #d1d5db;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .chat-subscription-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .chat-subscription-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-subscription-btn-primary {
+            background: #7c3aed;
+            color: white;
+            border: none;
+        }
+
+        .chat-subscription-btn-primary:hover {
+            background: #6d28d9;
+        }
+
+        .chat-subscription-btn-secondary {
+            background: transparent;
+            color: #a855f7;
+            border: 1px solid #a855f7;
+        }
+
+        .chat-subscription-btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        /* Responsive for chat */
+        @media (max-width: 480px) {
+            .chat-widget {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .chat-container {
+                width: calc(100vw - 40px);
+                height: 70vh;
+                right: 20px;
+            }
+            
+            .chat-button {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>Intelligence Pro</span>
+                </div>
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#services" class="nav-link">Услуги</a>
+                    <a href="#about" class="nav-link">О нас</a>
+                    <a href="#contact" class="nav-link">Контакты</a>
+                </nav>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Умные боты для <span class="gradient-text">Telegram</span>
+                    </h1>
+                    <p class="hero-description">
+                        Разрабатываем интеллектуальных Telegram-ботов с использованием передовых нейросетей. 
+                        Автоматизируйте бизнес-процессы и улучшите взаимодействие с клиентами.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="scrollToContact()">
+                            Заказать бота
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-secondary" onclick="showExamples()">
+                            Посмотреть примеры
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Почему выбирают нас</h2>
+                    <p>Мы создаем не просто ботов, а интеллектуальных помощников, которые понимают контекст и решают задачи</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>ИИ-интеграция</h3>
+                        <p>Используем ChatGPT, Claude, Gemini и другие передовые нейросети для создания умных ботов</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Естественное общение</h3>
+                        <p>Боты понимают контекст, запоминают историю диалога и общаются как живые консультанты</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Быстрая разработка</h3>
+                        <p>От идеи до готового бота за 1-2 недели. Используем современные фреймворки и готовые решения</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Масштабируемость</h3>
+                        <p>Боты выдерживают тысячи одновременных пользователей и легко масштабируются под нагрузку</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Безопасность</h3>
+                        <p>Все данные защищены, соблюдаем GDPR и российское законодательство о персональных данных</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Поддержка 24/7</h3>
+                        <p>Предоставляем техническую поддержку и обновления для всех созданных ботов</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Наши услуги</h2>
+                    <p>Полный спектр услуг по разработке и внедрению Telegram-ботов для вашего бизнеса</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <h3>Чат-боты с ИИ</h3>
+                            <p>Умные собеседники для клиентской поддержки, консультаций и продаж</p>
+                        </div>
+                        <ul class="service-features">
+                            <li>• Обработка естественного языка</li>
+                            <li>• Контекстные ответы</li>
+                            <li>• Интеграция с CRM</li>
+                            <li>• Аналитика диалогов</li>
+                        </ul>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-header">
+                            <h3>E-commerce боты</h3>
+                            <p>Автоматизация продаж, каталоги товаров и обработка заказов</p>
+                        </div>
+                        <ul class="service-features">
+                            <li>• Каталог товаров</li>
+                            <li>• Корзина и оплата</li>
+                            <li>• Уведомления о заказах</li>
+                            <li>• Программы лояльности</li>
+                        </ul>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-header">
+                            <h3>Бизнес-автоматизация</h3>
+                            <p>Автоматизация внутренних процессов и интеграция с системами</p>
+                        </div>
+                        <ul class="service-features">
+                            <li>• Уведомления и отчеты</li>
+                            <li>• Управление задачами</li>
+                            <li>• Интеграция с API</li>
+                            <li>• Мониторинг систем</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>О компании Intelligence Pro</h2>
+                        <p>
+                            Мы — команда опытных разработчиков, специализирующихся на создании интеллектуальных решений для бизнеса. 
+                            Наша миссия — сделать взаимодействие между компаниями и клиентами более эффективным с помощью современных 
+                            технологий искусственного интеллекта.
+                        </p>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="50">0</div>
+                                <div class="stat-label">успешных проектов</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="3">0</div>
+                                <div class="stat-label">года опыта</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="24">0</div>
+                                <div class="stat-label">часа поддержки</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="100">0</div>
+                                <div class="stat-label">% качества</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Экспертиза в ИИ</h4>
+                                <p>Глубокие знания в области машинного обучения</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon">
+                                <i class="fab fa-telegram"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Telegram API</h4>
+                                <p>Полное владение возможностями платформы</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Быстрая разработка</h4>
+                                <p>Agile-подход и современные инструменты</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Свяжитесь с нами</h2>
+                    <p>Готовы обсудить ваш проект? Оставьте заявку, и мы свяжемся с вами в течение часа</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-form-container">
+                        <h3>Оставить заявку</h3>
+                        <p>Расскажите о вашем проекте, и мы подготовим персональное предложение</p>
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Имя</label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Телефон</label>
+                                    <input type="tel" id="phone" name="phone" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Описание проекта</label>
+                                <textarea id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" >
+                                Отправить заявку
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Телефон</h4>
+                                <p>+7 (999) 812-58-24</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Email</h4>
+                                <p>intelligence.pro@internet.ru</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-telegram"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Telegram</h4>
+                                <p>@Intelligence_Studio</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="Work">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Наши работы</h2>
+                    <p></p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Бот с искусственным интеллектом</h3>
+                        <p>Используем ChatGPT, Claude, Gemini, DeepSeek Llama-4 и другие нейросети</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Чат-бот для BY CL агентства</h3>
+                        <p>Автоматизировать обработку 70% типовых запросов в службу поддержки.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Виртуальный консультант</h3>
+                        <p>Увеличить конверсию в покупку</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>HR-бот</h3>
+                        <p>Автоматизировать рекрутинг стажеров.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Виртуальный помощник</h3>
+                        <p>Упростить запись на прием</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Готовы создать своего умного бота?</h2>
+                    <p>Начните автоматизацию уже сегодня. Первая консультация — бесплатно!</p>
+                    <div class="cta-buttons">
+                        <button class="btn btn-light" onclick="scrollToContact()">
+                            Получить консультацию
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-outline-light" onclick="showExamples()">
+                            Посмотреть портфолио
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-robot"></i>
+                        <span>Intelligence Pro</span>
+                    </div>
+                    <p>Создаем умных Telegram-ботов с использованием передовых нейросетей</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Услуги</h4>
+                    <ul>
+                        <li>Чат-боты с ИИ</li>
+                        <li>E-commerce боты</li>
+                        <li>Бизнес-автоматизация</li>
+                        <li>Техподдержка</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Компания</h4>
+                    <ul>
+                        <li>О нас</li>
+                        <li>Портфолио</li>
+                        <li>Блог</li>
+                        <li>Карьера</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <ul>
+                        <li>+7 (999) 812-58-24</li>
+                        <li>intelligence.pro@internet.ru</li>
+                        <li>@Intelligence_Studio</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Intelligence Pro. Все права защищены.</p>
+                <div class="footer-links">
+                    <a href="#">Политика конфиденциальности</a>
+                    <a href="#">Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Отправляем заявку...</p>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-check-circle"></i>
+                <h3>Заявка отправлена!</h3>
+            </div>
+            <p>Спасибо за обращение! Мы свяжемся с вами в течение часа.</p>
+            <button class="btn btn-primary" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> Чат с нейросетью</h3>
+                <button class="close-chat" id="closeChat">&times;</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    Привет! Я ваш AI ассистент. Чем могу помочь?
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Напишите сообщение...">
+                <button class="send-button" id="sendButton"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div class="chat-button" id="chatButton">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+    </div>
+
+    <script>
+        // Конфигурация API (в реальном проекте лучше получать это с сервера)
+const API_KEY = "io-v2-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvd25lciI6Ijg2NTAyY2Q1LTJiYjEtNGUwOS05NDE4LTgyMGY3NmU0MDNiNiIsImV4cCI6NDkwNDk1NTk5NX0.ewq1ZHcwRYnq35nUA4nKBpBpUhBZQ-EMnxsm1zcD4hyl7TGWhd70ikdQGKnCmMsdOWunAgHFDX3878pLpT2QJw";
+const API_URL = "https://api.intelligence.io.solutions/api/v1/chat/completions";
+const BOT_TOKEN = '7582722127:AAEmyBwxXgY3jx5CB7_ye7F_3w-bwbFdFXw';
+const CHAT_ID = '5964864548';
+
+// Глобальные переменные
+let messageHistory = [
+    {
+        role: "system",
+        content: "Ты полезный ассистент компании Intelligence Pro, которая разрабатывает Telegram-ботов с искусственным интеллектом. Отвечай вежливо и профессионально."
+    }
+];
+
+// Инициализация после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация чата
+    initChatWidget();
+    
+    // Инициализация формы
+    initContactForm();
+    
+    // Инициализация мобильного меню
+    initMobileMenu();
+    
+    // Анимация статистики
+    initStatsAnimation();
+    
+    // Прокрутка к секциям
+    initScrollToSections();
+});
+
+// Инициализация чат-виджета
+function initChatWidget() {
+    const chatButton = document.getElementById('chatButton');
+    const chatContainer = document.getElementById('chatContainer');
+    const closeChat = document.getElementById('closeChat');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+
+    // Открытие/закрытие чата
+    chatButton.addEventListener('click', function() {
+        chatContainer.classList.toggle('active');
+        if (chatContainer.classList.contains('active')) {
+            chatInput.focus();
+        }
+    });
+
+    closeChat.addEventListener('click', function() {
+        chatContainer.classList.remove('active');
+    });
+
+    // Отправка сообщения
+    function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+        
+        addMessage(message, 'user');
+        messageHistory.push({ role: "user", content: message });
+        chatInput.value = '';
+        
+        const typingMessage = addTypingIndicator();
+        
+        // Запрос к API нейросети
+        fetchAIResponse()
+            .then(response => {
+                typingMessage.remove();
+                if (response) {
+                    addMessage(response, 'bot');
+                    messageHistory.push({ role: "assistant", content: response });
+                } else {
+                    showFallbackMessage();
+                }
+            })
+            .catch(error => {
+                typingMessage.remove();
+                showFallbackMessage();
+                console.error("Ошибка API:", error);
+            });
+    }
+
+    // Запрос к AI API
+    async function fetchAIResponse() {
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({
+                    "model": "meta-llama/Llama-3.3-70B-Instruct",
+                    "messages": messageHistory
+                })
+            });
+            
+            if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+            
+            const data = await response.json();
+            return data.choices?.[0]?.message?.content || null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Фолбэк сообщение
+    function showFallbackMessage() {
+        const responses = [
+            "Извините, возникли технические трудности. Пожалуйста, попробуйте позже.",
+            "Сейчас я не могу ответить. Свяжитесь с нами через контакты на сайте.",
+            "Произошла ошибка. Наши контакты: @Intelligence_Studio"
+        ];
+        addMessage(responses[Math.floor(Math.random() * responses.length)], 'bot');
+    }
+
+    // Добавление сообщения в чат
+    function addMessage(text, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+        messageElement.textContent = text;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return messageElement;
+    }
+
+    // Индикатор набора
+    function addTypingIndicator() {
+        const typingElement = document.createElement('div');
+        typingElement.classList.add('message', 'bot-message');
+        
+        typingElement.innerHTML = `
+            <div class="typing-indicator">
+                Нейросеть печатает
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
+        `;
+        
+        chatMessages.appendChild(typingElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return typingElement;
+    }
+
+    // Обработчики событий
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+}
+
+// Инициализация формы обратной связи
+function initContactForm() {
+    const form = document.getElementById('contactForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const successModal = document.getElementById('successModal');
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Валидация формы
+        if (!validateForm(form)) return;
+        
+        // Показать загрузку
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+        submitBtn.disabled = true;
+        loadingOverlay.style.display = 'flex';
+        
+        try {
+            // Отправка в Telegram
+            const isSent = await sendToTelegram(form);
+            
+            if (isSent) {
+                form.reset();
+                successModal.style.display = 'block';
+            } else {
+                alert('Ошибка при отправке. Пожалуйста, попробуйте позже.');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка: ' + error.message);
+        } finally {
+            // Скрыть загрузку
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            loadingOverlay.style.display = 'none';
+        }
+    });
+
+    // Валидация формы
+    function validateForm(form) {
+        const phone = form.querySelector('#phone').value;
+        const email = form.querySelector('#email').value;
+        
+        // Простая валидация телефона
+        if (phone && !/^[\d\s\-\+\(\)]{10,20}$/.test(phone)) {
+            alert('Пожалуйста, введите корректный номер телефона');
+            return false;
+        }
+        
+        // Простая валидация email
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert('Пожалуйста, введите корректный email');
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Отправка в Telegram
+    async function sendToTelegram(form) {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const text = `
+📌 <b>Новая заявка с сайта!</b>
+
+👤 <b>Имя:</b> ${data.name || '—'}
+📞 <b>Телефон:</b> ${data.phone || '—'}
+📧 <b>Email:</b> ${data.email || '—'}
+📝 <b>Описание проекта:</b>
+${data.message || '—'}
+        `.trim();
+
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: text,
+                    parse_mode: 'HTML'
+                })
+            });
+            
+            const result = await response.json();
+            return result.ok;
+        } catch (error) {
+            console.error('Ошибка отправки в Telegram:', error);
+            return false;
+        }
+    }
+
+    // Закрытие модального окна
+    document.querySelector('#successModal .btn').addEventListener('click', function() {
+        successModal.style.display = 'none';
+    });
+}
+
+// Инициализация мобильного меню
+function initMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    hamburger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+    
+    // Закрытие меню при клике на ссылку
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+}
+
+// Анимация статистики
+function initStatsAnimation() {
+    const statItems = document.querySelectorAll('.stat-item');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target.querySelector('.stat-number');
+                const endValue = parseInt(target.getAttribute('data-target'));
+                animateValue(target, 0, endValue, 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    statItems.forEach(item => observer.observe(item));
+    
+    function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            element.textContent = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+}
+
+// Прокрутка к секциям
+function initScrollToSections() {
+    // Прокрутка к контактам
+    window.scrollToContact = function() {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    };
+    
+    // Прокрутка к примерам работ
+    window.showExamples = function() {
+        document.getElementById('Work').scrollIntoView({ behavior: 'smooth' });
+    };
+    
+    // Закрытие модального окна
+    window.closeModal = function() {
+        document.getElementById('successModal').style.display = 'none';
+    };
+}
+    </script>
+
+</body>
+</html>
